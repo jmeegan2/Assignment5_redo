@@ -122,9 +122,9 @@ fun ImageDetailScreen(imageUrl: String) {
         Log.d("ImageDetailScreen", "imageUrl value: $imageUrl")
         Image(
 
-            painter = rememberAsyncImagePainter(model = imageUrl.replace("200", "800")),
+            painter = rememberAsyncImagePainter(model = imageUrl.replace("200", "200")),
             contentDescription = null,
-            contentScale = ContentScale.Crop,
+            contentScale = ContentScale.FillBounds, // Change this line
             modifier = Modifier.matchParentSize()
         )
     }
