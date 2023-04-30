@@ -3,26 +3,28 @@ package edu.towson.cosc435.meegan.assignment5_redo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.ui.tooling.preview.Preview
 import edu.towson.cosc435.meegan.assignment5_redo.ui.theme.Assignment5_redoTheme
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             Assignment5_redoTheme {
-                SingleImage()
+               ImageList()
             }
         }
     }
@@ -50,4 +52,21 @@ fun SingleImage() {
         contentDescription = null,
         modifier = Modifier.fillMaxSize()
     )
+}
+
+@Composable
+fun ImageList() {
+    LazyVerticalGrid(
+        columns = GridCells.Adaptive(minSize = 200.dp)
+    ){
+        items(20) { index ->
+            val imageUrl = "https://picsum.photos/200/200?random=$index"
+            val painter: Painter = rememberAsyncImagePainter(imageUrl)
+            Image(
+                painter = painter,
+                contentDescription = null,
+                modifier = Modifier.aspectRatio(1f)
+            )
+        }
+    }
 }
