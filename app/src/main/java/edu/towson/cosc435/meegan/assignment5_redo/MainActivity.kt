@@ -10,7 +10,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.CircularProgressIndicator
@@ -37,30 +36,47 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val navController = rememberNavController()
             Assignment5_redoTheme {
-                NavHost(navController, startDestination = "image_grid") {
-                    composable("image_grid") { ImageGrid(navController) }
-                    composable("image_detail/{bitmap}") { backStackEntry ->
-                        ImageDetailScreen(backStackEntry.arguments?.get("bitmap") as Bitmap)
-                    }
-                }
-            }
+                ScreenMain()
             }
         }
     }
+}
+
+
+// It contains route names to all three screens
 
 
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     Assignment5_redoTheme {
-
+        ScreenMain()
     }
 }
 
+@Composable
+fun ScreenMain() {
 
+    val navController = rememberNavController()
 
+    NavHost(navController = navController, startDestination = Routes.ImageGrid.route) {
+
+        // First route : Home
+        composable(Routes.ImageGrid.route) {
+
+            // Lay down the Home Composable
+            // and pass the navController
+            ImageGrid(navController = navController)
+        }
+
+        // Settings Route, Notice the "/{id}" in last,
+        // its the argument passed down from homeScreen
+        composable(Routes.ImageDetailScreen.route) { navBackStack ->
+            ImageDetailScreen()
+        }
+    }
+}
 
 //  columns = GridCells.Adaptive(minSize = 200.dp)
 @Composable
@@ -68,6 +84,7 @@ fun ImageGrid(navController: NavController) {
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 200.dp)
     ) {
+
         items(20) { index ->
 
             val imageUrl = "https://picsum.photos/200/200?random=$index"
@@ -80,17 +97,14 @@ fun ImageGrid(navController: NavController) {
                     noImage = true
                 }
             }
-
             Box(
                 modifier = Modifier
                     .aspectRatio(1f)
                     .clickable {
-                        print("U clicked this image")
-                        bitmap?.let { imageBitmap ->
-                            Log.d("IMAGE CLICKED VALUE :", imageBitmap.toString())
-                        }
+                        navController.navigate(Routes.ImageDetailScreen.route)
                     }
-            ) {
+            )
+            {
                 if (bitmap == null && !noImage) {
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 } else if (noImage) {
@@ -105,7 +119,7 @@ fun ImageGrid(navController: NavController) {
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.matchParentSize()
                     )
-                    Log.d("BITMAP VALUE OF IMAGE:" , bitmap.toString())
+//                    Log.d("BITMAP VALUE OF IMAGE:" , bitmap.toString())
                 }
             }
         }
@@ -125,14 +139,15 @@ private suspend fun fetchImage(url: String): Bitmap? {
 }
 
 
+
 @Composable
-fun ImageDetailScreen(bitmap: Bitmap) {
-    Box(modifier = Modifier.fillMaxSize()) {
-        Image(
-            bitmap = bitmap.asImageBitmap(),
-            contentDescription = null,
-            contentScale = ContentScale.Fit,
-            modifier = Modifier.fillMaxSize()
-        )
+fun ImageDetailScreen() {
+//    Log.d("DETAIL BITMAP VALUE")
+    Log.d("HI", "U made it")
+//        Image(
+//            bitmap = bitmap!!.asImageBitmap(),
+//            contentDescription = null,
+//            contentScale = ContentScale.Fit,
+//            modifier = Modifier.fillMaxSize()
+//        )
     }
-}
